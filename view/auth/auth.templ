@@ -153,3 +153,11 @@ templ LoginForm(creds supabase.UserCredentials, errors LoginErrors) {
 		<button type="submit" class="btn btn-primary w-full">Login</button>
 	</form>
 }
+
+templ CallbackScript() {
+	<script>
+		var url = window.location.href;
+		var newUrl = url.replace("#", "?")
+		window.location = newUrl
+	</script>
+}
