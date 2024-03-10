@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/Volgar04/dreampicai/db"
 	"github.com/Volgar04/dreampicai/handler"
 	"github.com/Volgar04/dreampicai/pkg/sb"
 	"github.com/go-chi/chi/v5"
@@ -46,6 +47,9 @@ func main() {
 
 func initEverything() error {
 	if err := godotenv.Load(); err != nil {
+		return err
+	}
+	if err := db.Init(); err != nil {
 		return err
 	}
 	return sb.Init()

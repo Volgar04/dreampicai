@@ -7,6 +7,6 @@ import (
 )
 
 func HandleSettingsIndex(w http.ResponseWriter, r *http.Request) error {
-	user := getAtuhenticatedUser(r)
+	user := getAuthenticatedUser(r)
 	return render(r, w, settings.Index(user))
 }

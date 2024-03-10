@@ -2,12 +2,16 @@ package handler
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"net/http"
 	"os"
 	"strings"
 
+	"github.com/Volgar04/dreampicai/db"
 	"github.com/Volgar04/dreampicai/pkg/sb"
 	"github.com/Volgar04/dreampicai/types"
+	"github.com/google/uuid"
 	"github.com/gorilla/sessions"
 )
 
@@ -17,7 +21,7 @@ func WithAuth(next http.Handler) http.Handler {
 			next.ServeHTTP(w, r)
 			return
 		}
-		user := getAtuhenticatedUser(r)
+		user := getAuthenticatedUser(r)
 		if !user.LoggedIn {
 			http.Redirect(w, r, "/login", http.StatusSeeOther)
 			return
@@ -46,9 +50,16 @@ func WithUser(next http.Handler) http.Handler {
 			return
 		}
 		user := types.AuthenticatedUser{
+			ID:       uuid.MustParse(resp.ID),
 			Email:    resp.Email,
 			LoggedIn: true,
 		}
+		account, err := db.GetAccountByUserID(user.ID)
+		if !errors.Is(err, sql.ErrNoRows) {
+			next.ServeHTTP(w, r)
+			return
+		}
+		user.Account = account
 		ctx := context.WithValue(r.Context(), types.UserContextKey, user)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	}
