@@ -1705,6 +1705,10 @@ html {
   margin-bottom: 1.25rem;
 }
 
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+
 .mt-1 {
   margin-top: 0.25rem;
 }
@@ -1729,6 +1733,18 @@ html {
   display: flex;
 }
 
+.h-\[calc\(100vh-69px\)\] {
+  height: calc(100vh - 69px);
+}
+
+.w-1\/4 {
+  width: 25%;
+}
+
+.w-3\/4 {
+  width: 75%;
+}
+
 .w-full {
   width: 100%;
 }
@@ -1739,6 +1755,10 @@ html {
 
 .max-w-md {
   max-width: 28rem;
+}
+
+.max-w-screen-xl {
+  max-width: 1280px;
 }
 
 .max-w-sm {
@@ -1786,6 +1806,10 @@ html {
 
 .border-b {
   border-bottom-width: 1px;
+}
+
+.border-r {
+  border-right-width: 1px;
 }
 
 .border-gray-700 {
@@ -1871,6 +1895,10 @@ html {
 
 .font-semibold {
   font-weight: 600;
+}
+
+.leading-\[1\.2\] {
+  line-height: 1.2;
 }
 
 .text-error {
