@@ -4,15 +4,6 @@ import "github.com/Volgar04/dreampicai/view/layout"
 import "github.com/Volgar04/dreampicai/types"
 import "github.com/Volgar04/dreampicai/view/ui"
 
-type ProfileParams struct {
-	Username string
-	Success  bool
-}
-
-type ProfileErrors struct {
-	Username string
-}
-
 templ Index(user types.AuthenticatedUser) {
 	@layout.App(true) {
 		<div class="max-w-2xl w-full mx-auto mt-8">
@@ -23,24 +14,47 @@ templ Index(user types.AuthenticatedUser) {
 				}, ProfileErrors{})
 			</div>
 			<div class="mt-10">
-				<h1 class="text-lg font-semibold border-b border-gray-700 pb-2">Change password</h1>
+				<h1 class="text-lg font-semibold border-b border-gray-700 pb-2">Reset password</h1>
 				<div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 items-center mt-8">
-					<dt class="">Current password</dt>
+					<dt class="">Reset password</dt>
 					<dd class="sm:col-span-2 sm:mt-0 ">
-						<input class="input input-bordered w-full max-w-sm"/>
-					</dd>
-					<dt class="">New password</dt>
-					<dd class="sm:col-span-2 sm:mt-0 ">
-						<input class="input input-bordered w-full max-w-sm"/>
-					</dd>
-					<dt></dt>
-					<dd class="sm:col-span-2 sm:mt-0 ">
-						<button type="button" class="btn btn-primary">Update password</button>
+						<form
+							hx-post="/auth/reset-password"
+							hx-swap="outerHTML"
+						>
+							<button class="btn btn-primary">Reset password</button>
+						</form>
 					</dd>
 				</div>
 			</div>
 		</div>
 	}
+}
+
+type ResetPasswordParams struct {
+	CurrentPassword string
+	NewPassword     string
+}
+
+type ResetPasswordErrors struct {
+	CurrentPassword string
+	NewPassword     string
+}
+
+templ ResetPasswordForm(errors ResetPasswordErrors) {
+	<form
+		hx-put="/settings/account/password"
+		hx-swap="outerHTML"
+	></form>
+}
+
+type ProfileParams struct {
+	Username string
+	Success  bool
+}
+
+type ProfileErrors struct {
+	Username string
 }
 
 templ ProfileForm(params ProfileParams, errors ProfileErrors) {
