@@ -1,14 +1,19 @@
 package handler
 
 import (
+	"context"
+	"database/sql"
 	"log/slog"
 	"net/http"
 	"strconv"
 
 	"github.com/Volgar04/dreampicai/db"
+	"github.com/Volgar04/dreampicai/pkg/validate"
 	"github.com/Volgar04/dreampicai/types"
 	"github.com/Volgar04/dreampicai/view/generate"
 	"github.com/go-chi/chi/v5"
+	"github.com/google/uuid"
+	"github.com/uptrace/bun"
 )
 
 func HandleGenerateIndex(w http.ResponseWriter, r *http.Request) error {
@@ -25,16 +30,41 @@ func HandleGenerateIndex(w http.ResponseWriter, r *http.Request) error {
 
 func HandleGenerateCreate(w http.ResponseWriter, r *http.Request) error {
 	user := getAuthenticatedUser(r)
-	prompt := "red sport car in a garden"
-	image := types.Image{
-		Prompt: prompt,
-		Status: types.ImageStatusPending,
-		UserID: user.ID,
+	amount, _ := strconv.Atoi(r.FormValue("amount"))
+	params := generate.FormParams{
+		Prompt: r.FormValue("prompt"),
+		Amount: amount,
 	}
-	if err := db.CreateImage(&image); err != nil {
+	var errors generate.FormErrors
+	if amount <= 0 || amount > 8 {
+		errors.Amount = "Please enter a valid amount"
+		return render(r, w, generate.Form(params, errors))
+	}
+	ok := validate.New(params, validate.Fields{
+		"Prompt": validate.Rules(validate.Min(10), validate.Max(200)),
+	}).Validate(&errors)
+	if !ok {
+		return render(r, w, generate.Form(params, errors))
+	}
+	err := db.Bun.RunInTx(r.Context(), &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
+		batchID := uuid.New()
+		for i := 0; i < params.Amount; i++ {
+			image := types.Image{
+				Prompt:  params.Prompt,
+				Status:  types.ImageStatusPending,
+				UserID:  user.ID,
+				BatchID: batchID,
+			}
+			if err := db.CreateImage(&image); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+	if err != nil {
 		return err
 	}
-	return render(r, w, generate.GalleryImage(image))
+	return hxRedirect(w, r, "/generate")
 }
 
 func HandleGenerateImageStatus(w http.ResponseWriter, r *http.Request) error {

@@ -1,7 +1,21 @@
 <div class=\"flex w-full h-[calc(100vh-69px)]\"><div class=\"w-[400px] border-r border-gray-700 p-4\">
 </div><div class=\"w-3/4 bg-base-300\">
 </div></div>
-<form hx-post=\"/generate\" hx-swap=\"afterbegin\" hx-target=\"#gallery\"><div class=\"\"><button class=\"btn btn-primary w-full\">Generate</button></div></form>
+<form hx-post=\"/generate\" hx-swap=\"outerHTML\"><div class=\"\"><label class=\"form-control\"><div class=\"label\"><span class=\"label-text\">Enter your prompt</span></div><textarea name=\"prompt\" class=\"textarea textarea-bordered h-24\" placeholder=\"A woman in a white dress\">
+</textarea> 
+<div class=\"label\"><span class=\"label-text text-error\">
+</span></div>
+</label> <label class=\"form-control my-4\"><div class=\"label\"><span class=\"label-text\">How many images ?</span></div><div class=\"join\">
+<input class=\"join-item btn\" value=\"
+\" type=\"radio\" checked name=\"amount\" aria-label=\"
+\">
+<input class=\"join-item btn\" value=\"
+\" type=\"radio\" name=\"amount\" aria-label=\"
+\">
+</div>
+<div class=\"label\"><span class=\"label-text text-error\">
+</span></div>
+</label> <button class=\"btn btn-primary w-full mt-4\">Generate</button></div></form>
 <div class=\"grid grid-cols-4 p-4 gap-4\" id=\"gallery\">
 </div>
 <div class=\"bg-green-100 rounded-xl aspect-[2/3] cursor-pointer\"><img class=\"object-cover rounded-xl\" source=\"
