@@ -1,6 +1,8 @@
 module github.com/Volgar04/dreampicai
 
-go 1.20
+go 1.21
+
+toolchain go1.22.0
 
 require (
 	github.com/go-chi/chi/v5 v5.0.12
@@ -14,7 +16,7 @@ require (
 )
 
 require (
-	github.com/a-h/templ v0.2.543 // indirect
+	github.com/a-h/templ v0.2.598 // indirect
 	github.com/fatih/color v1.16.0 // indirect
 	github.com/golang-migrate/migrate v3.5.4+incompatible // indirect
 	github.com/golang-migrate/migrate/v4 v4.17.0
